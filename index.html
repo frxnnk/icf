@@ -1,0 +1,853 @@
+<html><head><base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Inverse Cramer Fund | Investing Backwards to Move Forward</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root {
+  --black: #0a0a0a;
+  --gold: #ffd700;
+  --white: #ffffff;
+  --gray: #333333;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Header Styles */
+header {
+  padding: 20px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between; /* Changed from flex-start */
+  align-items: center;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+.nav-link svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--white);
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover svg {
+  stroke: var(--gold);
+}
+
+.nav-link::after {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  nav {
+    display: flex;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 10, 10, 0.95);
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .nav-link {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+.hero-image {
+  max-width: 400px;
+  margin: 30px auto 0; /* Added top margin to create space after button */
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+  opacity: 0;
+  transform: translateY(30px);
+  display: block; /* Ensures image is block-level for margin auto to work */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding-top: 40px;
+}
+
+/* Update button margin */
+.hero .cta-button {
+  margin: 20px 0; /* Add some spacing around the button */
+}
+
+.hero h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, var(--gold), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  max-width: 600px;
+  opacity: 0;
+  transform: translateY(30px);
+  margin-left: auto;  /* Add this */
+  margin-right: auto; /* Add this */
+}
+
+.cta-button {
+  background: var(--gold);
+  color: var(--black);
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: not-allowed; /* Make button look disabled */
+  position: relative;
+  opacity: 0.6; /* Make button look disabled */
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover::after {
+  content: 'COMING SOON';
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--gold);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cta-button:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* FAQ Section */
+.faq {
+  padding: 100px 0;
+  position: relative;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 15px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.faq-question {
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-answer {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fund Allocation Section */
+.allocation {
+  padding: 100px 0;
+  position: relative;
+}
+
+.allocation-content {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pie-chart {
+  flex-shrink: 0;
+}
+
+.pie-segment {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.pie-segment:hover {
+  transform: translateX(10px) translateY(10px);
+}
+
+.allocation-details {
+  max-width: 600px;
+}
+
+.allocation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.allocation-item:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.allocation-item h3 {
+  margin-bottom: 10px;
+  color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .allocation-content {
+    flex-direction: column;
+  }
+  
+  .pie-chart svg {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .allocation-item {
+    margin-bottom: 15px;
+  }
+}
+
+/* Roadmap Section */
+.roadmap {
+  padding: 100px 0;
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: var(--gold);
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.timeline-item {
+  width: 100%;
+  margin-bottom: 70px;
+  position: relative;
+}
+
+.timeline-content {
+  position: relative;
+  width: calc(50% - 40px);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-left: auto;
+  transition: all 0.3s ease;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.timeline-content:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.phase {
+  display: inline-block;
+  padding: 5px 15px;
+  background: var(--gold);
+  color: var(--black);
+  border-radius: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.timeline-content h3 {
+  color: var(--gold);
+  margin-bottom: 15px;
+}
+
+.timeline-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.timeline-content li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.timeline-content li::before {
+  content: '•';
+  color: var(--gold);
+  position: absolute;
+  left: 0;
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 30px;
+  }
+  
+  .timeline-content {
+    width: calc(100% - 60px);
+    margin-left: 60px !important;
+  }
+}
+
+/* Footer */
+footer {
+  padding: 50px 0;
+  background: var(--gray);
+  position: relative;
+  z-index: 2;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.social-icon {
+  color: var(--gold);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: translateY(-3px) scale(1.1);
+  filter: drop-shadow(0 0 10px var(--gold));
+}
+
+.powered-by {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-left: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+</style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  
+  <header>
+    <div class="container nav-container">
+      <div class="logo">
+        ICF 
+        <span class="powered-by">Powered by <a href="https://daos.fun" style="color: var(--gold); text-decoration: none;">daos.fun</a></span>
+      </div>
+      <nav>
+        <a href="#hero" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </a>
+        <a href="#faq" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12" y2="17"></line>
+          </svg>
+        </a>
+        <a href="#allocation" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2v20M2 12h20"/>
+          </svg>
+        </a>
+        <a href="#roadmap" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <polyline points="6 10 12 4 18 10"></polyline>
+          </svg>
+        </a>
+        <button class="cta-button" disabled>Join the DAO</button>
+      </nav>
+    </div>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="container hero-content">
+      <h1>There is always a bullmarket somewhere</h1>
+      <p>The Inverse Cramer Fund thrives by doing the opposite of mainstream speculation. We leverage cutting-edge research to invest in two volatile yet promising asset classes: DeSci coins and memecoins.</p>
+      <button class="cta-button" disabled>Join the DAO</button>
+      <img src="/photo_2024-12-03_03-48-44.jpg" alt="Jim Cramer - The Wolf of Wrong Street" class="hero-image">
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What is the Inverse Cramer Fund?</h3>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>The Inverse Cramer Fund is a decentralized autonomous organization (DAO) that combines the fun of memecoins with the promise of DeSci (decentralized science) projects. Inspired by a contrarian approach, we invest in high-risk, high-reward crypto assets while involving the community in key decisions.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How does the fundraising process work?</h3>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>We open a one-week fundraising period where contributors can buy DAO tokens at a fair launch price. The total funds raised will determine the starting capital for our investments. Everyone gets the same token price during this period to ensure fairness.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What can I do with the DAO tokens?</h3>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            <ul style="list-style-type: none; padding-left: 0;">
+              <li><strong>Voting Power:</strong> Influence 20% of the fund's investment decisions.</li>
+              <li><strong>Profit Sharing:</strong> At the fund's expiration, redeem profits proportional to your token holdings.</li>
+              <li><strong>Trading Options:</strong> You can sell your tokens anytime on the AMM as long as the fund's market cap exceeds the original raise.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="allocation" class="allocation">
+    <div class="container">
+      <h2 class="section-title">Fund Allocation</h2>
+      <div class="allocation-content">
+        <div class="pie-chart">
+          <svg width="400" height="400" viewBox="0 0 400 400">
+            <g transform="translate(200, 200)">
+              <!-- DeSci coins 30% (108 degrees) -->
+              <path d="M0,0 L180,0 A180,180 0 0,1 -90,155.885 L0,0" 
+                    fill="#FFD700" class="pie-segment">
+                <title>DeSci Coins - 30%</title>
+              </path>
+              <!-- Memecoins 30% (108 degrees) -->
+              <path d="M0,0 L-90,155.885 A180,180 0 0,1 -180,0 L0,0" 
+                    fill="#FFA500" class="pie-segment">
+                <title>Memecoins - 30%</title>
+              </path>
+              <!-- AI Sentient Memes 20% (72 degrees) -->
+              <path d="M0,0 L-180,0 A180,180 0 0,1 -90,-155.885 L0,0" 
+                    fill="#FF6B6B" class="pie-segment">
+                <title>AI Sentient Memes - 20%</title>
+              </path>
+              <!-- DAO Choice 20% (72 degrees) -->
+              <path d="M0,0 L-90,-155.885 A180,180 0 0,1 180,0 L0,0" 
+                    fill="#4ECDC4" class="pie-segment">
+                <title>DAO Choice - 20%</title>
+              </path>
+            </g>
+          </svg>
+        </div>
+        <div class="allocation-details">
+          <div class="allocation-item">
+            <span class="dot" style="background: #FFD700"></span>
+            <div>
+              <h3>30% - DeSci Coins</h3>
+              <p>We target blockchain projects that revolutionize scientific research, funding, and collaboration. Supporting DeSci tokens contributes to the democratization of scientific discovery.</p>
+            </div>
+          </div>
+          <div class="allocation-item">
+            <span class="dot" style="background: #FFA500"></span>
+            <div>
+              <h3>30% - Memecoins</h3>
+              <p>More than just internet jokes—they're a pulse check on community sentiment and market psychology, with high engagement and viral growth potential.</p>
+            </div>
+          </div>
+          <div class="allocation-item">
+            <span class="dot" style="background: #FF6B6B"></span>
+            <div>
+              <h3>20% - AI Sentient Memes</h3>
+              <p>With static memes, cults form around pictures — With sentient memes like BULLY or BEEPY, cults form around AI.</p>
+            </div>
+          </div>
+          <div class="allocation-item">
+            <span class="dot" style="background: #4ECDC4"></span>
+            <div>
+              <h3>20% - DAO Choice</h3>
+              <p>Our DAO members decide this allocation, embracing collective intelligence and community-driven investing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap" class="roadmap">
+    <div class="container">
+      <h2 class="section-title">Our Roadmap</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Phase 1</div>
+            <h3>Launch at daos.fun</h3>
+            <ul>
+              <li>Official launch on DAOs.fun platform</li>
+              <li>Fair token launch for all contributors</li>
+              <li>Setup of fund infrastructure</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Phase 2</div>
+            <h3>Build a Strong Community</h3>
+            <ul>
+              <li>Establish social media presence</li>
+              <li>Create engaging content</li>
+              <li>Reward community participation</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Phase 3</div>
+            <h3>Token Live Trading</h3>
+            <ul>
+              <li>Launch DAO token</li>
+              <li>Enable market trading</li>
+              <li>Monitor market performance</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Phase 4</div>
+            <h3>Start Trading</h3>
+            <ul>
+              <li>Deploy 80% team-managed investments</li>
+              <li>20% community-voted allocations</li>
+              <li>Transparent trade reporting</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Phase 5</div>
+            <h3>Launch Voting Dashboard & Forum</h3>
+            <ul>
+              <li>Release community voting platform</li>
+              <li>Launch discussion forum</li>
+              <li>Implement engagement rewards</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="phase">Future</div>
+            <h3>Future Goals</h3>
+            <ul>
+              <li>DeSci project partnerships</li>
+              <li>Strategic DAO collaborations</li>
+              <li>Ecosystem expansion</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="social-links">
+        <a href="https://twitter.com/inversecramerfund" class="social-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--gold)">
+            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+          </svg>
+        </a>
+        <a href="https://discord.gg/inversecramerfund" class="social-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--gold)">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Particles.js
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+          value: 80,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: '#ffd700'
+        },
+        shape: {
+          type: 'circle'
+        },
+        opacity: {
+          value: 0.5,
+          random: false
+        },
+        size: {
+          value: 3,
+          random: true
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: '#ffd700',
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: 'none',
+          random: false,
+          straight: false,
+          out_mode: 'out',
+          bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: true,
+            mode: 'repulse'
+          },
+          resize: true
+        }
+      },
+      retina_detect: true
+    });
+
+    // Initialize GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Animate hero content
+    gsap.to('.hero h1, .hero p, .hero .cta-button', {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.2,
+      ease: 'power4.out'
+    });
+
+    // Animate hero image
+    gsap.to('.hero-image', {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: 'power4.out'
+    });
+
+    // Animate allocation items
+    gsap.to('.allocation-item', {
+      scrollTrigger: {
+        trigger: '.allocation-content',
+        start: 'top center',
+      },
+      opacity: 1,
+      x: 0,
+      duration: 0.8,
+      stagger: 0.2
+    });
+
+    // Animate roadmap items
+    gsap.to('.timeline-item', {
+      scrollTrigger: {
+        trigger: '.timeline',
+        start: 'top center',
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      stagger: 0.2
+    });
+
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const toggle = question.querySelector('.toggle');
+        
+        if (answer.style.maxHeight) {
+          answer.style.maxHeight = null;
+          toggle.textContent = '+';
+        } else {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          toggle.textContent = '-';
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        const headerOffset = 80; // Height of your fixed header
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
